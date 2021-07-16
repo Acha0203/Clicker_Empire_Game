@@ -1,0 +1,135 @@
+body {
+	font-family: Futura, sans-serif;
+	letter-spacing: 0.02em;
+}
+
+p {
+	margin: 0!important;
+}
+
+/* font */
+.small-font {
+	color: #d0fff5;
+	text-shadow: 2px 2px 4px #363636;
+	font-size: 1.2rem;
+}
+
+.middle-font {
+	color: white;
+	text-shadow: 2px 2px 4px #363636;
+	font-size: 1.4rem;
+}
+
+.large-font {
+	color: white;
+	text-shadow: 2px 2px 4px #363636;
+	font-size: 1.6rem;
+}
+
+.x-large-font {
+	color: white;
+	text-shadow: 2px 2px 4px #363636;
+	font-size: 1.6rem;
+	letter-spacing: 0.1em!important;
+}
+
+.font-green {
+	color: #00ff80!important;
+}
+
+/* image size */
+.item-size {
+	height: 80px;
+	width: 120px;
+}
+
+.item-size-l {
+	height: 120px;
+	width: 180px;
+}
+
+.hamburger {
+	height: auto;
+	width: 160px;
+}
+
+/* effect */
+.hover {
+	cursor: pointer;
+}
+
+.hover:hover {
+	opacity: 0.8;
+}
+
+.hover-btn:hover {
+	background-color: #9b9b9b;
+}
+
+.hover-item:hover {
+	outline: solid #00ffff;
+}
+
+.hover-hamburger:hover {
+	cursor: pointer;
+	height: auto;
+	width: 180px;
+}
+
+#hamburger:active {
+	height: auto;
+	width: 200px;
+}
+
+btn:disabled {
+	opacity: 0.5;
+}
+
+/* specific layout */
+.city {
+	background-color: black;
+	background-image: url("../images/kuala-lumpur-1820944.jpg");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+.metallic {
+	border-top: 2px solid #dddddd;
+	border-left: 2px solid #dddddd;
+	border-right: 2px solid #292929;
+	border-bottom: 2px solid #292929;
+	background: linear-gradient(to bottom right, transparent, #797979);
+	background-color: #afafaf;
+}
+
+.concavity {
+	border-bottom: 3px solid #c2c2c2;
+	border-right: 3px solid #c2c2c2;
+	border-left: 3px solid #585858;
+	border-top: 3px solid #585858;
+	background: linear-gradient(to bottom, transparent, #407958);
+	background-color: #142e35;
+}
+
+.text-line {
+	border-bottom: 1px solid white;
+}
+
+.item-list-div {
+	height: 450px;
+	width: auto;
+	overflow: hidden;
+	overflow-y: scroll;
+}
+
+.redo-save-btn {
+	height: 200;
+	width: 200;
+	outline: 1px solid white;
+}
+
+.burger-div {
+	height: 400px;
+	width: auto;
+}
