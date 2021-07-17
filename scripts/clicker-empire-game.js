@@ -319,6 +319,7 @@ class View {
 		let initinalForm = document.createElement("div");
 		initinalForm.classList.add("d-flex", "flex-column", "justify-content-center", "align-items-center", "bg-white", "col-md-4", "col-6", "p-4");
 
+		// タイトル
 		let titleH2 = document.createElement("h2");
 		titleH2.classList.add("pb-3", "text-center");
 		titleH2.innerHTML = "Clicker Empire Game";
@@ -327,8 +328,25 @@ class View {
 		gameForm.setAttribute("id", "gameForm");
 		gameForm.setAttribute("onsubmit", "Controller.gameStart(); event.preventDefault()");
 
-		let formDiv1 = document.createElement("div");
-		formDiv1.classList.add("form-group", "d-flex", "flex-wrap", "justify-content-center");
+		// ゲームタイプを選ぶラジオボタンの表示
+		let radioButtonDiv = View.getRadioButtonDiv();
+
+		// プレイヤー名の入力ボックス
+		let playerNameDiv = View.getPlayerNameDiv();
+
+		// [Game Start]ボタン
+		let startButtonDiv = View.getStartButtonDiv();
+
+		gameForm.append(radioButtonDiv, playerNameDiv, startButtonDiv);
+		initinalForm.append(titleH2, gameForm);
+		container.append(initinalForm);
+
+		return container;
+	}
+
+	static getRadioButtonDiv() {
+		let radioButtonDiv = document.createElement("div");
+		radioButtonDiv.classList.add("form-group", "d-flex", "flex-wrap", "justify-content-center");
 
 		// New Gameボタン
 		let newGameBtnDiv = document.createElement("div");
@@ -363,13 +381,16 @@ class View {
 		continueBtnLabel.innerHTML = "Continue";
 
 		continueBtnDiv.append(continueBtn, continueBtnLabel);
-		formDiv1.append(newGameBtnDiv, continueBtnDiv);
+		radioButtonDiv.append(newGameBtnDiv, continueBtnDiv);
 
-		let formDiv2 = document.createElement("div");
-		formDiv2.classList.add("form-group");
-		let formDiv3 = formDiv2.cloneNode(true);
+		return radioButtonDiv;
+	}
 
-		// プレイヤー名の入力ボックス
+	// プレイヤー名の入力ボックス
+	static getPlayerNameDiv() {
+		let playerNameDiv = document.createElement("div");
+		playerNameDiv.classList.add("form-group");
+
 		let inputPlayerName = document.createElement("input");
 		inputPlayerName.classList.add("player-name", "col-12", "mb-2");
 		inputPlayerName.setAttribute("type", "text");
@@ -377,20 +398,24 @@ class View {
 		inputPlayerName.setAttribute("placeholder", "Your name");
 		inputPlayerName.required = true;
 
-		formDiv2.append(inputPlayerName);
+		playerNameDiv.append(inputPlayerName);
 
-		// [Game Start]ボタン
+		return playerNameDiv;
+	}
+
+	// [Game Start]ボタン
+	static getStartButtonDiv() {
+		let startButtonDiv = document.createElement("div");
+		startButtonDiv.classList.add("form-group");
+
 		let startBtn = document.createElement("button");
 		startBtn.classList.add("btn", "btn-primary", "col-12");
 		startBtn.setAttribute("type", "submit");
 		startBtn.innerHTML = "Game Start";
 
-		formDiv3.append(startBtn);
-		gameForm.append(formDiv1, formDiv2, formDiv3);
-		initinalForm.append(titleH2, gameForm);
-		container.append(initinalForm);
+		startButtonDiv.append(startBtn);
 
-		return container;
+		return startButtonDiv;
 	}
 
 	static mainGamePage(player) {
@@ -400,20 +425,43 @@ class View {
 		let outerDiv = document.createElement("div");
 		outerDiv.classList.add("metallic", "row", "justify-content-around", "col-12");
 
-		// 左側のレンダリング
+		// 左側の表示
+		let leftSideDiv = View.getLeftSideDiv(player);
+
+		// 右側の表示
+		let rightSideDiv = View.getRightSideDiv(player);
+
+		outerDiv.append(leftSideDiv, rightSideDiv);
+		mainDiv.append(outerDiv);
+
+		return mainDiv;
+	}
+
+	// 左側の表示
+	static getLeftSideDiv(player) {
 		let leftSideDiv = document.createElement("div");
 		leftSideDiv.classList.add("concavity", "d-flex", "flex-column", "justify-content-between", "col-md-4", "col-11", "my-2");
 
-		let infoCon = document.createElement("div");
-		infoCon.classList.add("metallic", "m-3", "p-2");
+		// ハンバーガーと所得金額の表示
+		let incomeInfoCon = View.getIncomeInfoCon(player);
+		// ハンバーガーの表示
+		let burgerDiv = View.getBurgerDiv(player);
+
+		leftSideDiv.append(incomeInfoCon, burgerDiv);
+
+		return leftSideDiv;
+	}
+
+	// ハンバーガーと所得金額の表示
+	static getIncomeInfoCon(player) {
+		let incomeInfoCon = document.createElement("div");
+		incomeInfoCon.classList.add("metallic", "m-3", "p-2");
 
 		// ハンバーガーの数の表示
 		let burgersCon = document.createElement("div");
 		burgersCon.classList.add("d-flex", "justify-content-center", "flex-wrap", "my-1");
-
 		// クリックごとの取得金額の表示
 		let incomePerClickCon = burgersCon.cloneNode(true);
-
 		// 秒ごとの取得金額の表示
 		let incomePerSecCon = burgersCon.cloneNode(true);
 
@@ -460,9 +508,13 @@ class View {
 		incomePerSecUnitDiv.append(incomePerSecUnitP);
 
 		incomePerSecCon.append(incomePerSecDiv, incomePerSecUnitDiv);
-		infoCon.append(burgersCon, incomePerClickCon, incomePerSecCon);
+		incomeInfoCon.append(burgersCon, incomePerClickCon, incomePerSecCon);
 
-		// ハンバーガーの表示
+		return incomeInfoCon;
+	}
+
+	// ハンバーガーの表示
+	static getBurgerDiv(player) {
 		let burgerDiv = document.createElement("div");
 		burgerDiv.classList.add("d-flex", "justify-content-center", "align-items-center", "burger-div");
 
@@ -482,12 +534,39 @@ class View {
 		});
 
 		burgerDiv.append(burgerImage);
-		leftSideDiv.append(infoCon, burgerDiv);
 
-		// 右側のレンダリング
+		return burgerDiv;
+	}
+
+	// 右側の表示
+	static getRightSideDiv(player) {
 		let rightSideDiv = document.createElement("div");
 		rightSideDiv.classList.add("flex-column", "align-items-center", "col-md-8", "col-12");
 
+		// プレイヤー情報の表示
+		let playerDataDiv = View.getPlayerDataDiv(player.name, player.age, player.days);
+
+		// 所持金の表示
+		let moneyCon = View.getMoneyCon(player.money);
+
+		// 説明文の表示
+		let descriptionDiv = View.getDescriptionDiv();
+
+		// アイテムリストの表示
+		let itemListDiv = document.createElement("div");
+		itemListDiv.classList.add("item-list-div", "concavity", "my-2", "col-12");
+		itemListDiv.append(View.getItemListCon(player));
+
+		// リセットボタンとセーブボタンの表示
+		let buttonDiv = View.getResetSaveButtonDiv(player);
+
+		rightSideDiv.append(playerDataDiv, moneyCon, descriptionDiv, itemListDiv, buttonDiv);
+
+		return rightSideDiv;
+	}
+
+	// プレイヤー情報の表示
+	static getPlayerDataDiv(name, age, days) {
 		let playerDataDiv = document.createElement("div");
 		playerDataDiv.classList.add("text-line", "row", "d-flex", "justify-content-center", "align-items-center", "mt-2");
 
@@ -496,7 +575,7 @@ class View {
 		playerNameDiv.classList.add("text-center", "col-4");
 		let playerNameP = document.createElement("p");
 		playerNameP.classList.add("middle-font");
-		playerNameP.innerHTML = player.name;
+		playerNameP.innerHTML = name;
 		playerNameDiv.append(playerNameP);
 
 		// 年齢の表示
@@ -511,7 +590,7 @@ class View {
 		let daysUnitDiv = ageDiv.cloneNode(true);
 
 		ageDiv.setAttribute("id", "age");
-		ageDiv.append(View.getAgeP(player.age));
+		ageDiv.append(View.getAgeP(age));
 
 		let ageUnitP = document.createElement("p");
 		ageUnitP.classList.add("middle-font", "py-2");
@@ -523,23 +602,30 @@ class View {
 
 		// 日数の表示
 		daysDiv.setAttribute("id", "days");
-		daysDiv.append(View.getDaysP(player.days));
+		daysDiv.append(View.getDaysP(days));
 		daysUnitP.innerHTML = "days";
 		daysUnitDiv.append(daysUnitP);
 		daysCon.append(daysDiv, daysUnitDiv);
 
 		playerDataDiv.append(playerNameDiv, ageCon, daysCon);
 
-		// 所持金の表示
+		return playerDataDiv;
+	}
+
+	// 所持金の表示
+	static getMoneyCon(money) {
 		let moneyCon = document.createElement("div");
 		let moneyDiv = document.createElement("div");
 		moneyDiv.classList.add("concavity", "container", "d-flex", "justify-content-end", "col-12", "mt-3");
 		moneyDiv.setAttribute("id", "money");
-		moneyDiv.append(View.getMoneyP(player.money));
-
+		moneyDiv.append(View.getMoneyP(money));
 		moneyCon.append(moneyDiv);
 
-		// 説明文の表示
+		return moneyCon;
+	}
+
+	// 説明文の表示
+	static getDescriptionDiv() {
 		let descriptionDiv = document.createElement("div");
 		descriptionDiv.classList.add("text-center");
 		let descriptionP = document.createElement("p");
@@ -547,15 +633,26 @@ class View {
 		descriptionP.innerHTML = "To make a lot of money, purchase items!"
 		descriptionDiv.append(descriptionP);
 
-		// アイテムリストの表示
-		let itemListDiv = document.createElement("div");
-		itemListDiv.classList.add("item-list-div", "concavity", "my-2", "col-12");
-		itemListDiv.append(View.getItemListCon(player));
+		return descriptionDiv;
+	}
 
-		// リセットボタンとセーブボタンの表示
+	// リセットボタンとセーブボタンの表示
+	static getResetSaveButtonDiv(player) {
 		let buttonDiv = document.createElement("div");
 		buttonDiv.classList.add("d-flex", "justify-content-end");
-		buttonDiv.innerHTML = View.getResetSaveButtonString();
+		buttonDiv.innerHTML =
+			`
+			<div>
+				<div class="redo-save-btn hover-btn p-2 my-3 reset-btn">
+					<i class="fas fa-redo fa-3x text-white"></i>
+				</div>
+			</div>
+			<div>
+				<div class="redo-save-btn hover-btn p-2 m-3 save-btn">
+					<i class="fas fa-save fa-3x text-white"></i>
+				</div>
+			</div>
+		`;
 
 		let resetBtn = buttonDiv.querySelectorAll(".reset-btn")[0];
 
@@ -579,29 +676,7 @@ class View {
 			else alert("Saving your data has been failed. (データの保存に失敗しました。)");
 		});
 
-		rightSideDiv.append(playerDataDiv, moneyCon, descriptionDiv, itemListDiv, buttonDiv);
-		outerDiv.append(leftSideDiv, rightSideDiv);
-		mainDiv.append(outerDiv);
-
-		return mainDiv;
-	}
-
-	static getResetSaveButtonString() {
-		let resetSaveButtonString =
-			`
-		<div>
-			<div class="redo-save-btn hover-btn p-2 my-3 reset-btn">
-				<i class="fas fa-redo fa-3x text-white"></i>
-			</div>
-		</div>
-		<div>
-			<div class="redo-save-btn hover-btn p-2 m-3 save-btn">
-				<i class="fas fa-save fa-3x text-white"></i>
-			</div>
-		</div>
-		`;
-
-		return resetSaveButtonString;
+		return buttonDiv;
 	}
 
 	// ハンバーガーの数を表示するp要素を返す
