@@ -11,19 +11,19 @@ p {
 .small-font {
 	color: #d0fff5;
 	text-shadow: 2px 2px 4px #363636;
-	font-size: 1.2rem;
+	font-size: 1rem;
 }
 
 .middle-font {
 	color: white;
 	text-shadow: 2px 2px 4px #363636;
-	font-size: 1.4rem;
+	font-size: 1.2rem;
 }
 
 .large-font {
 	color: white;
 	text-shadow: 2px 2px 4px #363636;
-	font-size: 1.6rem;
+	font-size: 1.4rem;
 }
 
 .x-large-font {
@@ -39,46 +39,41 @@ p {
 
 /* image size */
 .item-size {
-	height: 80px;
-	width: 120px;
+	height: 8vmin;
+	width: 12vmin;
 }
 
 .item-size-l {
-	height: 120px;
-	width: 180px;
+	height: 10vmin;
+	width: 14vmin;
 }
 
 .hamburger {
-	height: auto;
-	width: 160px;
+	height: 160px;
+	width: auto;
 }
 
 /* effect */
-.hover {
-	cursor: pointer;
-}
-
-.hover:hover {
-	opacity: 0.8;
-}
-
 .hover-btn:hover {
+	cursor: pointer;
 	background-color: #9b9b9b;
 }
 
 .hover-item:hover {
+	cursor: pointer;
+	opacity: 0.8;
 	outline: solid #00ffff;
 }
 
 .hover-hamburger:hover {
 	cursor: pointer;
-	height: auto;
-	width: 180px;
+	height: 180px;
+	width: auto;
 }
 
 #hamburger:active {
-	height: auto;
-	width: 200px;
+	height: 200px;
+	width: auto;
 }
 
 btn:disabled {
@@ -117,19 +112,25 @@ btn:disabled {
 }
 
 .item-list-div {
-	height: 450px;
+	height: 400px;
 	width: auto;
 	overflow: hidden;
 	overflow-y: scroll;
 }
 
 .redo-save-btn {
-	height: 200;
-	width: 200;
+	height: 48px;
+	width: 48px;
 	outline: 1px solid white;
 }
 
 .burger-div {
-	height: 400px;
+	height: 280px;
 	width: auto;
+}
+
+@media screen and (max-width: 768 px) {
+	.item-info {
+		display: none;
+	}
 }

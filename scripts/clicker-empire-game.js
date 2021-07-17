@@ -147,7 +147,24 @@ class Controller {
 
 	// セーブデータの検証。有効なデータならtrueを返す。
 	static inspectPlayerObject(player) {
-		if (Object.prototype.toString.call(player) !== "[object Object]" || Object.prototype.toString.call(player.name) !== "[object String]" || Object.prototype.toString.call(player.age) !== "[object Number]" || Object.prototype.toString.call(player.money) !== "[object Number]" || Object.prototype.toString.call(player.burgers) !== "[object Number]" || Object.prototype.toString.call(player.incomePerClick) !== "[object Number]" || Object.prototype.toString.call(player.incomePerSec) !== "[object Number]" || Object.prototype.toString.call(player.intervalId) !== "[object Number]" || !Controller.inspectItemList(player.itemList) || player.name === '' || player.age < 20 || player.money < 0 || player.burgers < 0 || player.incomePerClick < 0 || player.incomePerSec < 0 || player.intervalId < 1) return false;
+		if (Object.prototype.toString.call(player) !== "[object Object]" ||
+			Object.prototype.toString.call(player.name) !== "[object String]" ||
+			Object.prototype.toString.call(player.age) !== "[object Number]" ||
+			Object.prototype.toString.call(player.money) !== "[object Number]" ||
+			Object.prototype.toString.call(player.burgers) !== "[object Number]" ||
+			Object.prototype.toString.call(player.incomePerClick) !== "[object Number]" ||
+			Object.prototype.toString.call(player.incomePerSec) !== "[object Number]" ||
+			Object.prototype.toString.call(player.intervalId) !== "[object Number]" ||
+			!Controller.inspectItemList(player.itemList) ||
+			player.name === '' ||
+			player.age < 20 ||
+			player.money < 0 ||
+			player.burgers < 0 ||
+			player.incomePerClick < 0 ||
+			player.incomePerSec < 0 ||
+			player.intervalId < 1) {
+			return false;
+		}
 
 		return true;
 	}
@@ -163,7 +180,25 @@ class Controller {
 
 	// アイテムの検証。有効なデータならtrueを返す。
 	static inspectItem(item) {
-		if (Object.prototype.toString.call(item) !== "[object Object]" || Object.prototype.toString.call(item.itemName) !== "[object String]" || Object.prototype.toString.call(item.itemType) !== "[object String]" || Object.prototype.toString.call(item.maxPurchases) !== "[object Number]" || Object.prototype.toString.call(item.price) !== "[object Number]" || Object.prototype.toString.call(item.amount) !== "[object Number]" || Object.prototype.toString.call(item.incomeInfo1) !== "[object String]" || Object.prototype.toString.call(item.incomeInfo2) !== "[object String]" || Object.prototype.toString.call(item.imgUrl) !== "[object String]" || item.itemName === '' || item.itemType === '' || item.maxPurchases < -1 || item.price < 15000 || item.amount < 0 || item.incomeInfo1 === '' || item.incomeInfo2 === '' || item.imgUrl === '') return false;
+		if (Object.prototype.toString.call(item) !== "[object Object]" ||
+			Object.prototype.toString.call(item.itemName) !== "[object String]" ||
+			Object.prototype.toString.call(item.itemType) !== "[object String]" ||
+			Object.prototype.toString.call(item.maxPurchases) !== "[object Number]" ||
+			Object.prototype.toString.call(item.price) !== "[object Number]" ||
+			Object.prototype.toString.call(item.amount) !== "[object Number]" ||
+			Object.prototype.toString.call(item.incomeInfo1) !== "[object String]" ||
+			Object.prototype.toString.call(item.incomeInfo2) !== "[object String]" ||
+			Object.prototype.toString.call(item.imgUrl) !== "[object String]" ||
+			item.itemName === '' ||
+			item.itemType === '' ||
+			item.maxPurchases < -1 ||
+			item.price < 15000 ||
+			item.amount < 0 ||
+			item.incomeInfo1 === ''
+			|| item.incomeInfo2 === ''
+			|| item.imgUrl === '') {
+			return false;
+		}
 
 		return true;
 	}
@@ -363,14 +398,14 @@ class View {
 
 		// 左側のレンダリング
 		let leftSideDiv = document.createElement("div");
-		leftSideDiv.classList.add("concavity", "d-flex", "flex-column", "justify-content-between", "col-md-4", "col-11", "my-3");
+		leftSideDiv.classList.add("concavity", "d-flex", "flex-column", "justify-content-between", "col-md-4", "col-11", "my-2");
 
 		let infoCon = document.createElement("div");
 		infoCon.classList.add("metallic", "m-3", "text-center");
 
 		// ハンバーガーの数の表示
 		let burgersCon = document.createElement("div");
-		burgersCon.classList.add("d-flex", "justify-content-center", "flex-wrap", "my-3");
+		burgersCon.classList.add("d-flex", "justify-content-center", "flex-wrap", "my-2");
 
 		// クリックごとの取得金額の表示
 		let incomePerClickCon = burgersCon.cloneNode(true);
@@ -429,7 +464,7 @@ class View {
 
 		let burgerImage = document.createElement("img");
 		burgerImage.src = "images/cheeseburger-34315.svg";
-		burgerImage.classList.add("m-5", "hamburger", "hover-hamburger");
+		burgerImage.classList.add("m-4", "hamburger", "hover-hamburger", "user-select-none", "img-fluid");
 		burgerImage.setAttribute("name", "hamburger");
 		burgerImage.setAttribute("id", "hamburger");
 
@@ -450,13 +485,13 @@ class View {
 		rightSideDiv.classList.add("flex-column", "align-items-center", "col-md-8", "col-12");
 
 		let playerDataDiv = document.createElement("div");
-		playerDataDiv.classList.add("text-line", "row", "d-flex", "justify-content-around", "mt-3");
+		playerDataDiv.classList.add("text-line", "row", "d-flex", "justify-content-around", "mt-2");
 
 		// プレイヤー名の表示
 		let playerNameDiv = document.createElement("div");
 		playerNameDiv.classList.add("text-center");
 		let playerNameP = document.createElement("p");
-		playerNameP.classList.add("small-font", "p-2");
+		playerNameP.classList.add("middle-font", "p-2");
 		playerNameP.innerHTML = player.name;
 		playerNameDiv.append(playerNameP);
 
@@ -475,7 +510,7 @@ class View {
 		ageDiv.append(View.getAgeP(player.age));
 
 		let ageUnitP = document.createElement("p");
-		ageUnitP.classList.add("small-font", "py-2");
+		ageUnitP.classList.add("middle-font", "py-2");
 		let daysUnitP = ageUnitP.cloneNode(true);
 
 		ageUnitP.innerHTML = "yrs old";
@@ -494,7 +529,7 @@ class View {
 		// 所持金の表示
 		let moneyCon = document.createElement("div");
 		let moneyDiv = document.createElement("div");
-		moneyDiv.classList.add("concavity", "text-right", "col-12", "mt-3", "pr-3");
+		moneyDiv.classList.add("concavity", "text-right", "col-12", "mt-2", "pr-3");
 		moneyDiv.setAttribute("id", "money");
 		moneyDiv.append(View.getMoneyP(player.money));
 
@@ -520,12 +555,12 @@ class View {
 		buttonDiv.innerHTML =
 			`
 			<div>
-				<div class="redo-save-btn hover hover-btn p-3 my-2 ml-3 reset-btn">
+				<div class="redo-save-btn hover-btn p-2 my-2 ml-3 reset-btn">
 					<i class="fas fa-redo fa-2x text-white"></i>
 				</div>
 			</div>
 			<div>
-				<div class="redo-save-btn hover hover-btn p-3 my-2 ml-3 save-btn">
+				<div class="redo-save-btn hover-btn p-2 my-2 ml-3 save-btn">
 					<i class="fas fa-save fa-2x text-white"></i>
 				</div>
 			</div>
@@ -590,7 +625,7 @@ class View {
 	// 年齢を表示するp要素を返す
 	static getAgeP(age) {
 		let ageP = document.createElement("p");
-		ageP.classList.add("small-font", "py-2");
+		ageP.classList.add("middle-font", "py-2");
 		ageP.innerHTML = age;
 
 		return ageP;
@@ -599,7 +634,7 @@ class View {
 	// 日数を表示するp要素を返す
 	static getDaysP(days) {
 		let daysP = document.createElement("p");
-		daysP.classList.add("small-font", "py-2");
+		daysP.classList.add("middle-font", "py-2");
 		daysP.innerHTML = days.toLocaleString();
 
 		return daysP;
@@ -642,7 +677,7 @@ class View {
 
 			itemListString +=
 				`
-				<div class="item-list metallic row m-2 hover hover-item">
+				<div class="item-list metallic row m-2 hover-item">
 					<div class="col-4 d-flex justify-content-center align-items-center">
 						<img src="${itemList[i].imgUrl}" class="item-size">
 					</div>
@@ -654,7 +689,7 @@ class View {
 								</div>
 								<div class="d-flex justify-content-between flex-wrap">
 									<div class="text-left">
-										<p class="small-font py-1">￥${itemList[i].price.toLocaleString()}</p>
+										<p class="item-info small-font py-1">￥${itemList[i].price.toLocaleString()}</p>
 									</div>
 								</div>
 							</div>
@@ -663,7 +698,7 @@ class View {
 							</div>
 						</div>
 						<div class="text-left">
-							<p class="small-font font-green pb-2">${itemList[i].incomeInfo1}</p>
+							<p class="item-info small-font font-green pb-2">${itemList[i].incomeInfo1}</p>
 						</div>
 					</div>
 				</div>
@@ -718,34 +753,34 @@ class View {
 		purchaseDialogString =
 			`
 			<div class="metallic flex-column justify-content-center align-items-center m-2">
-				<div class="text-center col-12 mt-3">
+				<div class="text-center col-12 m-2">
 					<p class="x-large-font">${player.itemList[itemIndex].itemName}</p>
 				</div>
 				<div class="row">
-					<div class="text-left col-6 mt-3 ml-4">
+					<div class="text-left col-6 mt-2 ml-3">
 						<p class="small-font">You have: ${player.itemList[itemIndex].amount}</p>
 						<p class="small-font">Max Purchases: ${maxItem}</p>
 						<p class="small-font">Price: ￥${player.itemList[itemIndex].price.toLocaleString()}</p>
 						<p class="small-font font-green">${player.itemList[itemIndex].incomeInfo2}</p>
 					</div>
 					<div class="col-5 d-flex align-items-center justify-content-end">
-						<img src="${player.itemList[itemIndex].imgUrl}" class="item-size-l">
+						<img src="${player.itemList[itemIndex].imgUrl}" class="item-size-l img-fluid">
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="middle-font text-left my-2 ml-4" for="itemAmount">
+					<label class="middle-font text-left my-2 ml-3" for="itemAmount">
 						How Many would you like to purchase?
 					</label>
-					<input id="itemAmount" type="number" class="text-right col-11 ml-4 item-amount" min="0" value="0">
+					<input id="itemAmount" type="number" class="text-right col-11 ml-3 item-amount" min="0" value="0">
 				</div>
-				<div id="totalAmount" class="text-right mb-2 mr-4">
+				<div id="totalAmount" class="text-right mb-2 mr-3">
 					<p class="small-font">Total: ￥0</p>
 				</div>
 				<div class="d-flex justify-content-between">
-					<div class="col-6 pl-4 mb-3">
+					<div class="col-6 pl-3 mb-3">
 						<button class="btn btn-light text-success col-12 back-btn">Go Back</button>
 					</div>
-					<div class="col-6 pr-4 mb-3">
+					<div class="col-6 pr-3 mb-3">
 						<button class="btn btn-success col-12 purchase-btn" disabled>Purchase</button>
 					</div>
 				</div>
