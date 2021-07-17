@@ -533,7 +533,7 @@ class View {
 		// 所持金の表示
 		let moneyCon = document.createElement("div");
 		let moneyDiv = document.createElement("div");
-		moneyDiv.classList.add("concavity", "container", "d-flex", "justify-content-end", "col-12", "mt-2");
+		moneyDiv.classList.add("concavity", "container", "d-flex", "justify-content-end", "col-12", "mt-3");
 		moneyDiv.setAttribute("id", "money");
 		moneyDiv.append(View.getMoneyP(player.money));
 
