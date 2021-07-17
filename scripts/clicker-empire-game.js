@@ -4,7 +4,7 @@ const config = {
 }
 
 class Player {
-	constructor(name, age, money, days, burgers, incomePerClick, incomePerSec, intervalId, itemList = null) {
+	constructor(name, age, money, days, burgers, incomePerClick, incomePerSec, intervalId, timerStopFlag, itemList = null) {
 		this.name = name;
 		this.age = age;
 		this.money = money;
@@ -13,6 +13,7 @@ class Player {
 		this.incomePerClick = incomePerClick;
 		this.incomePerSec = incomePerSec;
 		this.intervalId = intervalId;
+		this.timerStopFlag = timerStopFlag; // タイマー停止中フラグ
 		if (itemList !== null) this.itemList = itemList;
 		else this.initializeItems();
 	}
@@ -101,7 +102,7 @@ class Controller {
 
 	// 新規プレイヤーを作成する
 	static createNewPlayer(playerName) {
-		let player = new Player(playerName, 20, 50000, 0, 0, 25, 0, null);
+		let player = new Player(playerName, 20, 50000, 0, 0, 25, 0, null, false);
 
 		if (playerName === "cheater") player.money = 100000000000000;
 
@@ -155,6 +156,7 @@ class Controller {
 			Object.prototype.toString.call(player.incomePerClick) !== "[object Number]" ||
 			Object.prototype.toString.call(player.incomePerSec) !== "[object Number]" ||
 			Object.prototype.toString.call(player.intervalId) !== "[object Number]" ||
+			Object.prototype.toString.call(player.timerStopFlag) !== "[object Boolean]" ||
 			!Controller.inspectItemList(player.itemList) ||
 			player.name === '' ||
 			player.age < 20 ||
@@ -214,6 +216,8 @@ class Controller {
 
 	// 秒ごとの処理
 	static startTimer(player) {
+		player.timerStopFlag = false; // タイマー停止中フラグをfalseにする
+
 		player.intervalId = setInterval(function () {
 			// 所持金の更新
 			player.money += player.incomePerSec;
@@ -230,8 +234,9 @@ class Controller {
 	}
 
 	// タイマー一時停止
-	static stopTimer(intervalId) {
-		clearInterval(intervalId);
+	static stopTimer(player) {
+		clearInterval(player.intervalId);
+		player.timerStopFlag = true; // タイマー停止中フラグをtrueにする
 	}
 
 	// 所持金が購入金額よりも大きければtrue、そうでないならfalseを返す
@@ -442,7 +447,7 @@ class View {
 		let leftSideDiv = document.createElement("div");
 		leftSideDiv.classList.add("concavity", "d-flex", "flex-column", "justify-content-between", "col-md-4", "col-11", "my-2");
 
-		// ハンバーガーと所得金額の表示
+		// ハンバーガーの数と所得金額の表示
 		let incomeInfoCon = View.getIncomeInfoCon(player);
 		// ハンバーガーの表示
 		let burgerDiv = View.getBurgerDiv(player);
@@ -452,7 +457,7 @@ class View {
 		return leftSideDiv;
 	}
 
-	// ハンバーガーと所得金額の表示
+	// ハンバーガーの数と所得金額の表示
 	static getIncomeInfoCon(player) {
 		let incomeInfoCon = document.createElement("div");
 		incomeInfoCon.classList.add("metallic", "m-3", "p-2");
@@ -525,12 +530,14 @@ class View {
 		burgerImage.setAttribute("id", "hamburger");
 
 		burgerImage.addEventListener("click", function () {
-			// クリック時の処理。ハンバーガーと所持金を追加
-			player.burgers++;
-			player.money += player.incomePerClick;
-			View.displayNumberOfBurgers(player.burgers);
-			View.displayMoney(player.money);
-
+			// クリック時の処理。タイマーが停止中は何もしない
+			if (!player.timerStopFlag) {
+				// ハンバーガーと所持金を追加
+				player.burgers++;
+				player.money += player.incomePerClick;
+				View.displayNumberOfBurgers(player.burgers);
+				View.displayMoney(player.money);
+			}
 		});
 
 		burgerDiv.append(burgerImage);
@@ -658,7 +665,7 @@ class View {
 
 		resetBtn.addEventListener("click", function () {
 			// リセット処理
-			Controller.stopTimer(player.intervalId);
+			Controller.stopTimer(player);
 			let resetFlag = window.confirm("Do you want to reset? (リセットしますか？)");
 			if (resetFlag) {
 				Controller.showStartPage();
@@ -743,7 +750,7 @@ class View {
 				View.displayNone(container);
 				View.createItemPurchaseDialog(player, i);
 				// アイテム購入画面が開いている間はタイマーを止める
-				Controller.stopTimer(player.intervalId);
+				Controller.stopTimer(player);
 			});
 		}
 
