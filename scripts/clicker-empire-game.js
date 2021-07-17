@@ -686,7 +686,7 @@ class View {
 
 			itemListString +=
 				`
-				<div class="item-list metallic row m-2 p-2 hover-item">
+				<div class="item-list metallic row m-3 p-2 hover-item">
 					<div class="col-4 d-flex justify-content-center align-items-center">
 						<img src="${itemList[i].imgUrl}" class="item-size">
 					</div>
