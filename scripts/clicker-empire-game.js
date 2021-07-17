@@ -194,9 +194,9 @@ class Controller {
 			item.maxPurchases < -1 ||
 			item.price < 15000 ||
 			item.amount < 0 ||
-			item.incomeInfo1 === ''
-			|| item.incomeInfo2 === ''
-			|| item.imgUrl === '') {
+			item.incomeInfo1 === '' ||
+			item.incomeInfo2 === '' ||
+			item.imgUrl === '') {
 			return false;
 		}
 
@@ -264,11 +264,13 @@ class Controller {
 		}
 	}
 
+	// クリックごとの取得金額を更新
 	static updateIncomePerClick(player) {
 		player.incomePerClick = player.getIncomePerClick();
 		View.displayIncomePerClick(player.incomePerClick);
 	}
 
+	// 秒ごとの取得金額を更新
 	static updateIncomePerSec(player) {
 		player.incomePerSec = player.getIncomePerSec();
 		View.displayIncomePerSec(player.incomePerSec);
@@ -282,7 +284,7 @@ class Controller {
 		Controller.startTimer(player);
 	}
 
-	// 利息を計算する
+	// 利息を計算
 	static calculateInterest(item) {
 		let interest = 0;
 		let itemPrice = item.price;
@@ -315,10 +317,10 @@ class View {
 		container.classList.add("city", "vh-100", "d-flex", "justify-content-center", "align-items-center");
 
 		let initinalForm = document.createElement("div");
-		initinalForm.classList.add("bg-white", "col-md-5", "col-6", "text-center", "p-4");
+		initinalForm.classList.add("d-flex", "flex-column", "justify-content-center", "align-items-center", "bg-white", "col-md-4", "col-6", "p-4");
 
 		let titleH2 = document.createElement("h2");
-		titleH2.classList.add("pb-3");
+		titleH2.classList.add("pb-3", "text-center");
 		titleH2.innerHTML = "Clicker Empire Game";
 
 		let gameForm = document.createElement("form");
@@ -326,11 +328,11 @@ class View {
 		gameForm.setAttribute("onsubmit", "Controller.gameStart(); event.preventDefault()");
 
 		let formDiv1 = document.createElement("div");
-		formDiv1.classList.add("form-group", "pb-3");
+		formDiv1.classList.add("form-group", "d-flex", "flex-wrap", "justify-content-center");
 
 		// New Gameボタン
 		let newGameBtnDiv = document.createElement("div");
-		newGameBtnDiv.classList.add("form-check");
+		newGameBtnDiv.classList.add("form-check", "mb-3", "mx-3");
 		let continueBtnDiv = newGameBtnDiv.cloneNode(true);
 
 		let newGameBtn = document.createElement("input");
@@ -367,17 +369,19 @@ class View {
 		formDiv2.classList.add("form-group");
 		let formDiv3 = formDiv2.cloneNode(true);
 
+		// プレイヤー名の入力ボックス
 		let inputPlayerName = document.createElement("input");
-		inputPlayerName.classList.add("player-name", "col-10");
+		inputPlayerName.classList.add("player-name", "col-12", "mb-2");
 		inputPlayerName.setAttribute("type", "text");
 		inputPlayerName.setAttribute("name", "playerName");
-		inputPlayerName.setAttribute("placeholder", "Enter your name");
+		inputPlayerName.setAttribute("placeholder", "Your name");
 		inputPlayerName.required = true;
 
 		formDiv2.append(inputPlayerName);
 
+		// [Game Start]ボタン
 		let startBtn = document.createElement("button");
-		startBtn.classList.add("btn", "btn-primary", "col-10");
+		startBtn.classList.add("btn", "btn-primary", "col-12");
 		startBtn.setAttribute("type", "submit");
 		startBtn.innerHTML = "Game Start";
 
@@ -425,7 +429,7 @@ class View {
 		numberOfBurgersDiv.append(View.getNumberOfBurgersP(player.burgers));
 
 		let burgersUnitP = document.createElement("p");
-		burgersUnitP.classList.add("large-font");
+		burgersUnitP.classList.add("large-font", "user-select-none");
 		burgersUnitP.innerHTML = "Burgers";
 		burgersUnitDiv.append(burgersUnitP);
 
@@ -436,7 +440,7 @@ class View {
 		incomePerClickDiv.append(View.getIncomePerClickP(player.incomePerClick));
 
 		let incomePerClickUnitP = document.createElement("p");
-		incomePerClickUnitP.classList.add("small-font");
+		incomePerClickUnitP.classList.add("small-font", "user-select-none");
 		let incomePerSecUnitP = incomePerClickUnitP.cloneNode(true);
 
 		incomePerClickUnitP.innerHTML = "per click";
@@ -485,19 +489,19 @@ class View {
 		rightSideDiv.classList.add("flex-column", "align-items-center", "col-md-8", "col-12");
 
 		let playerDataDiv = document.createElement("div");
-		playerDataDiv.classList.add("text-line", "row", "d-flex", "justify-content-around", "mt-2");
+		playerDataDiv.classList.add("text-line", "row", "d-flex", "justify-content-center", "align-items-center", "mt-2");
 
 		// プレイヤー名の表示
 		let playerNameDiv = document.createElement("div");
-		playerNameDiv.classList.add("text-center");
+		playerNameDiv.classList.add("text-center", "col-4");
 		let playerNameP = document.createElement("p");
-		playerNameP.classList.add("middle-font", "p-2");
+		playerNameP.classList.add("middle-font");
 		playerNameP.innerHTML = player.name;
 		playerNameDiv.append(playerNameP);
 
 		// 年齢の表示
 		let ageCon = document.createElement("div");
-		ageCon.classList.add("d-flex", "justify-content-around");
+		ageCon.classList.add("d-flex", "justify-content-center", "col-4");
 		let daysCon = ageCon.cloneNode(true);
 
 		let ageDiv = document.createElement("div");
@@ -529,7 +533,7 @@ class View {
 		// 所持金の表示
 		let moneyCon = document.createElement("div");
 		let moneyDiv = document.createElement("div");
-		moneyDiv.classList.add("concavity", "text-right", "col-12", "mt-2", "pr-3");
+		moneyDiv.classList.add("concavity", "container", "d-flex", "justify-content-end", "col-12", "mt-2");
 		moneyDiv.setAttribute("id", "money");
 		moneyDiv.append(View.getMoneyP(player.money));
 
@@ -551,20 +555,7 @@ class View {
 		// リセットボタンとセーブボタンの表示
 		let buttonDiv = document.createElement("div");
 		buttonDiv.classList.add("d-flex", "justify-content-end");
-
-		buttonDiv.innerHTML =
-			`
-			<div>
-				<div class="redo-save-btn hover-btn p-2 my-2 ml-3 reset-btn">
-					<i class="fas fa-redo fa-2x text-white"></i>
-				</div>
-			</div>
-			<div>
-				<div class="redo-save-btn hover-btn p-2 my-2 ml-3 save-btn">
-					<i class="fas fa-save fa-2x text-white"></i>
-				</div>
-			</div>
-		`;
+		buttonDiv.innerHTML = View.getResetSaveButtonString();
 
 		let resetBtn = buttonDiv.querySelectorAll(".reset-btn")[0];
 
@@ -595,10 +586,28 @@ class View {
 		return mainDiv;
 	}
 
+	static getResetSaveButtonString() {
+		let resetSaveButtonString =
+			`
+		<div>
+			<div class="redo-save-btn hover-btn p-2 my-3 reset-btn">
+				<i class="fas fa-redo fa-3x text-white"></i>
+			</div>
+		</div>
+		<div>
+			<div class="redo-save-btn hover-btn p-2 m-3 save-btn">
+				<i class="fas fa-save fa-3x text-white"></i>
+			</div>
+		</div>
+		`;
+
+		return resetSaveButtonString;
+	}
+
 	// ハンバーガーの数を表示するp要素を返す
 	static getNumberOfBurgersP(burgers) {
 		let burgersP = document.createElement("p");
-		burgersP.classList.add("large-font");
+		burgersP.classList.add("large-font", "user-select-none");
 		burgersP.innerHTML = burgers.toLocaleString();
 
 		return burgersP;
@@ -607,7 +616,7 @@ class View {
 	// クリックごとの取得金額を表示するp要素を返す
 	static getIncomePerClickP(incomePerClick) {
 		let incomePerClickP = document.createElement("p");
-		incomePerClickP.classList.add("small-font");
+		incomePerClickP.classList.add("small-font", "user-select-none");
 		incomePerClickP.innerHTML = "￥" + incomePerClick.toLocaleString();
 
 		return incomePerClickP;
@@ -616,7 +625,7 @@ class View {
 	// 秒ごとの取得金額を表示するp要素を返す
 	static getIncomePerSecP(incomePerSec) {
 		let incomePerSecP = document.createElement("p");
-		incomePerSecP.classList.add("small-font");
+		incomePerSecP.classList.add("small-font", "user-select-none");
 		incomePerSecP.innerHTML = "￥" + incomePerSec.toLocaleString();
 
 		return incomePerSecP;
@@ -677,19 +686,19 @@ class View {
 
 			itemListString +=
 				`
-				<div class="item-list metallic row m-2 hover-item">
+				<div class="item-list metallic row m-2 p-2 hover-item">
 					<div class="col-4 d-flex justify-content-center align-items-center">
 						<img src="${itemList[i].imgUrl}" class="item-size">
 					</div>
 					<div class="col-8">
 						<div class="row">
-							<div class="text-left col-8">
+							<div class="text-start col-8">
 								<div>
 									<p class="middle-font pt-2">${itemList[i].itemName}</p>
 								</div>
 								<div class="d-flex justify-content-between flex-wrap">
-									<div class="text-left">
-										<p class="item-info small-font py-1">￥${itemList[i].price.toLocaleString()}</p>
+									<div class="item-info text-start">
+										<p class="small-font py-1">￥${itemList[i].price.toLocaleString()}</p>
 									</div>
 								</div>
 							</div>
@@ -697,8 +706,8 @@ class View {
 								<p class="large-font item-amount">${itemAmount}</p>
 							</div>
 						</div>
-						<div class="text-left">
-							<p class="item-info small-font font-green pb-2">${itemList[i].incomeInfo1}</p>
+						<div class="item-info text-start">
+							<p class="small-font font-green pb-2">${itemList[i].incomeInfo1}</p>
 						</div>
 					</div>
 				</div>
@@ -752,35 +761,35 @@ class View {
 
 		purchaseDialogString =
 			`
-			<div class="metallic flex-column justify-content-center align-items-center m-2">
-				<div class="text-center col-12 m-2">
+			<div class="metallic flex-column justify-content-around align-items-center m-2 p-4">
+				<div class="text-center col-12 m-1">
 					<p class="x-large-font">${player.itemList[itemIndex].itemName}</p>
 				</div>
 				<div class="row">
-					<div class="text-left col-6 mt-2 ml-3">
+					<div class="text-start col-7 mt-2 ml-3">
 						<p class="small-font">You have: ${player.itemList[itemIndex].amount}</p>
 						<p class="small-font">Max Purchases: ${maxItem}</p>
 						<p class="small-font">Price: ￥${player.itemList[itemIndex].price.toLocaleString()}</p>
 						<p class="small-font font-green">${player.itemList[itemIndex].incomeInfo2}</p>
 					</div>
-					<div class="col-5 d-flex align-items-center justify-content-end">
+					<div class="d-flex align-items-start justify-content-end col-5 mt-2">
 						<img src="${player.itemList[itemIndex].imgUrl}" class="item-size-l img-fluid">
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="middle-font text-left my-2 ml-3" for="itemAmount">
+					<label class="middle-font text-center my-2 ml-3" for="itemAmount">
 						How Many would you like to purchase?
 					</label>
-					<input id="itemAmount" type="number" class="text-right col-11 ml-3 item-amount" min="0" value="0">
+					<input id="itemAmount" type="number" class="text-end col-12 ml-3 item-amount" min="0" value="0">
 				</div>
-				<div id="totalAmount" class="text-right mb-2 mr-3">
+				<div id="totalAmount" class="text-end my-2 mr-4">
 					<p class="small-font">Total: ￥0</p>
 				</div>
-				<div class="d-flex justify-content-between">
-					<div class="col-6 pl-3 mb-3">
+				<div class="row">
+					<div class="d-flex justify-content-stert col-6 mb-3">
 						<button class="btn btn-light text-success col-12 back-btn">Go Back</button>
 					</div>
-					<div class="col-6 pr-3 mb-3">
+					<div class="d-flex justify-content-end col-6 mb-3">
 						<button class="btn btn-success col-12 purchase-btn" disabled>Purchase</button>
 					</div>
 				</div>
