@@ -405,11 +405,11 @@ class View {
 		leftSideDiv.classList.add("concavity", "d-flex", "flex-column", "justify-content-between", "col-md-4", "col-11", "my-2");
 
 		let infoCon = document.createElement("div");
-		infoCon.classList.add("metallic", "m-3", "text-center");
+		infoCon.classList.add("metallic", "m-3", "p-2");
 
 		// ハンバーガーの数の表示
 		let burgersCon = document.createElement("div");
-		burgersCon.classList.add("d-flex", "justify-content-center", "flex-wrap", "my-2");
+		burgersCon.classList.add("d-flex", "justify-content-center", "flex-wrap", "my-1");
 
 		// クリックごとの取得金額の表示
 		let incomePerClickCon = burgersCon.cloneNode(true);
