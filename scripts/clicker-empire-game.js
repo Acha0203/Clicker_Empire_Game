@@ -10,9 +10,9 @@ class Player {
 		this.money = money;
 		this.days = days;
 		this.burgers = burgers;
-		this.incomePerClick = incomePerClick;
-		this.incomePerSec = incomePerSec;
-		this.intervalId = intervalId;
+		this.incomePerClick = incomePerClick; // クリックごとの取得金額
+		this.incomePerSec = incomePerSec; // 秒ごとの取得金額
+		this.intervalId = intervalId; // タイマーのID
 		this.timerStopFlag = timerStopFlag; // タイマー停止中フラグ
 		if (itemList !== null) this.itemList = itemList;
 		else this.initializeItems();
@@ -97,7 +97,7 @@ class Controller {
 		View.displayNone(config.mainPage);
 		View.displayBlock(config.startPage);
 		config.mainPage.innerHTML = '';
-		config.startPage.append(View.startGamePage());
+		config.startPage.append(View.createStartGamePage());
 	}
 
 	// 新規プレイヤーを作成する
@@ -231,7 +231,7 @@ class Controller {
 		View.displayNone(config.startPage);
 		View.displayBlock(config.mainPage);
 		config.startPage.innerHTML = '';
-		config.mainPage.append(View.mainGamePage(player));
+		config.mainPage.append(View.createMainGamePage(player));
 		Controller.startTimer(player);
 	}
 
@@ -307,7 +307,7 @@ class Controller {
 	// 購入画面からアイテムリスト表示に戻る
 	static backToItemList(container, player) {
 		container.innerHTML = '';
-		container.append(View.getItemListCon(player));
+		container.append(View.createItemListCon(player));
 		// タイマー再開
 		Controller.startTimer(player);
 	}
@@ -340,7 +340,8 @@ class View {
 		ele.classList.add("d-block");
 	}
 
-	static startGamePage() {
+	// ゲーム開始画面のdiv要素を返す
+	static createStartGamePage() {
 		let container = document.createElement("div");
 		container.classList.add("city", "vh-100", "d-flex", "justify-content-center", "align-items-center");
 
@@ -357,13 +358,13 @@ class View {
 		gameForm.setAttribute("onsubmit", "Controller.gameStart(); event.preventDefault()");
 
 		// ゲームタイプを選ぶラジオボタンの表示
-		let radioButtonDiv = View.getRadioButtonDiv();
+		let radioButtonDiv = View.createRadioButtonDiv();
 
 		// プレイヤー名の入力ボックス
-		let playerNameDiv = View.getPlayerNameDiv();
+		let playerNameDiv = View.createPlayerNameDiv();
 
 		// [Game Start]ボタン
-		let startButtonDiv = View.getStartButtonDiv();
+		let startButtonDiv = View.createStartButtonDiv();
 
 		gameForm.append(radioButtonDiv, playerNameDiv, startButtonDiv);
 		initinalForm.append(titleH2, gameForm);
@@ -372,7 +373,8 @@ class View {
 		return container;
 	}
 
-	static getRadioButtonDiv() {
+	// ゲームタイプを選ぶラジオボタンのdiv要素を返す
+	static createRadioButtonDiv() {
 		let radioButtonDiv = document.createElement("div");
 		radioButtonDiv.classList.add("form-group", "d-flex", "flex-wrap", "justify-content-center");
 
@@ -384,9 +386,9 @@ class View {
 		let newGameBtn = document.createElement("input");
 		newGameBtn.classList.add("form-check-input");
 		newGameBtn.setAttribute("type", "radio");
+		newGameBtn.setAttribute("name", "gameType");
 		let continueBtn = newGameBtn.cloneNode(true);
 
-		newGameBtn.setAttribute("name", "gameType");
 		newGameBtn.setAttribute("value", "newGame");
 		newGameBtn.setAttribute("id", "newGame");
 		newGameBtn.defaultChecked = true;
@@ -401,7 +403,6 @@ class View {
 		newGameBtnDiv.append(newGameBtn, newGameBtnLabel);
 
 		// Continueボタン
-		continueBtn.setAttribute("name", "gameType");
 		continueBtn.setAttribute("value", "continue");
 		continueBtn.setAttribute("id", "continue");
 
@@ -414,8 +415,8 @@ class View {
 		return radioButtonDiv;
 	}
 
-	// プレイヤー名の入力ボックス
-	static getPlayerNameDiv() {
+	// プレイヤー名入力ボックスのdiv要素を返す
+	static createPlayerNameDiv() {
 		let playerNameDiv = document.createElement("div");
 		playerNameDiv.classList.add("form-group");
 
@@ -431,8 +432,8 @@ class View {
 		return playerNameDiv;
 	}
 
-	// [Game Start]ボタン
-	static getStartButtonDiv() {
+	// [Game Start]ボタンのdiv要素を返す
+	static createStartButtonDiv() {
 		let startButtonDiv = document.createElement("div");
 		startButtonDiv.classList.add("form-group");
 
@@ -446,7 +447,8 @@ class View {
 		return startButtonDiv;
 	}
 
-	static mainGamePage(player) {
+	// ゲームのメイン画面のdiv要素を返す
+	static createMainGamePage(player) {
 		let mainDiv = document.createElement("div");
 		mainDiv.classList.add("min-vh-100", "d-flex", "justify-content-center", "align-items-center");
 
@@ -454,10 +456,10 @@ class View {
 		outerDiv.classList.add("metallic", "row", "justify-content-around", "col-12");
 
 		// 左側の表示
-		let leftSideDiv = View.getLeftSideDiv(player);
+		let leftSideDiv = View.createLeftSideDiv(player);
 
 		// 右側の表示
-		let rightSideDiv = View.getRightSideDiv(player);
+		let rightSideDiv = View.createRightSideDiv(player);
 
 		outerDiv.append(leftSideDiv, rightSideDiv);
 		mainDiv.append(outerDiv);
@@ -465,23 +467,23 @@ class View {
 		return mainDiv;
 	}
 
-	// 左側の表示
-	static getLeftSideDiv(player) {
+	// ゲームのメイン画面左側のdiv要素を返す
+	static createLeftSideDiv(player) {
 		let leftSideDiv = document.createElement("div");
 		leftSideDiv.classList.add("concavity", "d-flex", "flex-column", "justify-content-between", "col-md-4", "col-11", "my-2");
 
 		// ハンバーガーの数と所得金額の表示
-		let incomeInfoCon = View.getIncomeInfoCon(player);
+		let incomeInfoCon = View.createIncomeInfoCon(player);
 		// ハンバーガーの表示
-		let burgerDiv = View.getBurgerDiv(player);
+		let burgerDiv = View.createBurgerDiv(player);
 
 		leftSideDiv.append(incomeInfoCon, burgerDiv);
 
 		return leftSideDiv;
 	}
 
-	// ハンバーガーの数と所得金額の表示
-	static getIncomeInfoCon(player) {
+	// ハンバーガーの数と所得金額のdiv要素を返す
+	static createIncomeInfoCon(player) {
 		let incomeInfoCon = document.createElement("div");
 		incomeInfoCon.classList.add("metallic", "m-3", "p-2");
 
@@ -502,7 +504,7 @@ class View {
 		let incomePerClickUnitDiv = numberOfBurgersDiv.cloneNode(true);
 
 		numberOfBurgersDiv.setAttribute("id", "numberOfBurgers");
-		numberOfBurgersDiv.append(View.getNumberOfBurgersP(player.burgers));
+		numberOfBurgersDiv.append(View.createNumberOfBurgersP(player.burgers));
 
 		let burgersUnitP = document.createElement("p");
 		burgersUnitP.classList.add("large-font", "user-select-none");
@@ -513,7 +515,7 @@ class View {
 
 		// クリックごとの取得金額の表示
 		incomePerClickDiv.setAttribute("id", "incomePerClick");
-		incomePerClickDiv.append(View.getIncomePerClickP(player.incomePerClick));
+		incomePerClickDiv.append(View.createIncomePerClickP(player.incomePerClick));
 
 		let incomePerClickUnitP = document.createElement("p");
 		incomePerClickUnitP.classList.add("small-font", "user-select-none");
@@ -530,7 +532,7 @@ class View {
 		let incomePerSecDiv = incomePerSecUnitDiv.cloneNode(true);
 
 		incomePerSecDiv.setAttribute("id", "incomePerSec");
-		incomePerSecDiv.append(View.getIncomePerSecP(player.incomePerSec));
+		incomePerSecDiv.append(View.createIncomePerSecP(player.incomePerSec));
 
 		incomePerSecUnitP.innerHTML = "per sec";
 		incomePerSecUnitDiv.append(incomePerSecUnitP);
@@ -541,8 +543,8 @@ class View {
 		return incomeInfoCon;
 	}
 
-	// ハンバーガーの表示
-	static getBurgerDiv(player) {
+	// ハンバーガーのdiv要素を返す
+	static createBurgerDiv(player) {
 		let burgerDiv = document.createElement("div");
 		burgerDiv.classList.add("d-flex", "justify-content-center", "align-items-center", "burger-div");
 
@@ -568,37 +570,37 @@ class View {
 		return burgerDiv;
 	}
 
-	// 右側の表示
-	static getRightSideDiv(player) {
+	// ゲームメイン画面右側のdiv要素を返す
+	static createRightSideDiv(player) {
 		let rightSideDiv = document.createElement("div");
 		rightSideDiv.classList.add("flex-column", "align-items-center", "col-md-8", "col-12");
 
 		// プレイヤー情報の表示
-		let playerDataDiv = View.getPlayerDataDiv(player.name, player.age, player.days);
+		let playerDataDiv = View.createPlayerDataCon(player.name, player.age, player.days);
 
 		// 所持金の表示
-		let moneyCon = View.getMoneyCon(player.money);
+		let moneyCon = View.createMoneyCon(player.money);
 
 		// 説明文の表示
-		let descriptionDiv = View.getDescriptionDiv();
+		let descriptionDiv = View.createDescriptionDiv();
 
 		// アイテムリストの表示
 		let itemListDiv = document.createElement("div");
 		itemListDiv.classList.add("item-list-div", "concavity", "my-2", "col-12");
-		itemListDiv.append(View.getItemListCon(player));
+		itemListDiv.append(View.createItemListCon(player));
 
 		// リセットボタンとセーブボタンの表示
-		let buttonDiv = View.getResetSaveButtonDiv(player);
+		let buttonDiv = View.createResetSaveButtonDiv(player);
 
 		rightSideDiv.append(playerDataDiv, moneyCon, descriptionDiv, itemListDiv, buttonDiv);
 
 		return rightSideDiv;
 	}
 
-	// プレイヤー情報の表示
-	static getPlayerDataDiv(name, age, days) {
-		let playerDataDiv = document.createElement("div");
-		playerDataDiv.classList.add("text-line", "row", "d-flex", "justify-content-center", "align-items-center", "mt-2");
+	// プレイヤー情報のdiv要素を返す
+	static createPlayerDataCon(name, age, days) {
+		let playerDataCon = document.createElement("div");
+		playerDataCon.classList.add("text-line", "row", "d-flex", "justify-content-center", "align-items-center", "mt-2");
 
 		// プレイヤー名の表示
 		let playerNameDiv = document.createElement("div");
@@ -620,7 +622,7 @@ class View {
 		let daysUnitDiv = ageDiv.cloneNode(true);
 
 		ageDiv.setAttribute("id", "age");
-		ageDiv.append(View.getAgeP(age));
+		ageDiv.append(View.createAgeP(age));
 
 		let ageUnitP = document.createElement("p");
 		ageUnitP.classList.add("middle-font", "py-2");
@@ -632,30 +634,30 @@ class View {
 
 		// 日数の表示
 		daysDiv.setAttribute("id", "days");
-		daysDiv.append(View.getDaysP(days));
+		daysDiv.append(View.createDaysP(days));
 		daysUnitP.innerHTML = "days";
 		daysUnitDiv.append(daysUnitP);
 		daysCon.append(daysDiv, daysUnitDiv);
 
-		playerDataDiv.append(playerNameDiv, ageCon, daysCon);
+		playerDataCon.append(playerNameDiv, ageCon, daysCon);
 
-		return playerDataDiv;
+		return playerDataCon;
 	}
 
-	// 所持金の表示
-	static getMoneyCon(money) {
+	// 所持金のdiv要素を返す
+	static createMoneyCon(money) {
 		let moneyCon = document.createElement("div");
 		let moneyDiv = document.createElement("div");
 		moneyDiv.classList.add("concavity", "container", "d-flex", "justify-content-end", "col-12", "mt-3");
 		moneyDiv.setAttribute("id", "money");
-		moneyDiv.append(View.getMoneyP(money));
+		moneyDiv.append(View.createMoneyP(money));
 		moneyCon.append(moneyDiv);
 
 		return moneyCon;
 	}
 
-	// 説明文の表示
-	static getDescriptionDiv() {
+	// 説明文のdiv要素を返す
+	static createDescriptionDiv() {
 		let descriptionDiv = document.createElement("div");
 		descriptionDiv.classList.add("text-center");
 		let descriptionP = document.createElement("p");
@@ -666,8 +668,8 @@ class View {
 		return descriptionDiv;
 	}
 
-	// リセットボタンとセーブボタンの表示
-	static getResetSaveButtonDiv(player) {
+	// リセットボタンとセーブボタンのdiv要素を返す
+	static createResetSaveButtonDiv(player) {
 		let buttonDiv = document.createElement("div");
 		buttonDiv.classList.add("d-flex", "justify-content-end");
 		buttonDiv.innerHTML =
@@ -717,7 +719,7 @@ class View {
 	}
 
 	// ハンバーガーの数を表示するp要素を返す
-	static getNumberOfBurgersP(burgers) {
+	static createNumberOfBurgersP(burgers) {
 		let burgersP = document.createElement("p");
 		burgersP.classList.add("large-font", "user-select-none");
 		burgersP.innerHTML = burgers.toLocaleString();
@@ -726,7 +728,7 @@ class View {
 	}
 
 	// クリックごとの取得金額を表示するp要素を返す
-	static getIncomePerClickP(incomePerClick) {
+	static createIncomePerClickP(incomePerClick) {
 		let incomePerClickP = document.createElement("p");
 		incomePerClickP.classList.add("small-font", "user-select-none");
 		incomePerClickP.innerHTML = "￥" + incomePerClick.toLocaleString();
@@ -735,7 +737,7 @@ class View {
 	}
 
 	// 秒ごとの取得金額を表示するp要素を返す
-	static getIncomePerSecP(incomePerSec) {
+	static createIncomePerSecP(incomePerSec) {
 		let incomePerSecP = document.createElement("p");
 		incomePerSecP.classList.add("small-font", "user-select-none");
 		incomePerSecP.innerHTML = "￥" + incomePerSec.toLocaleString();
@@ -744,7 +746,7 @@ class View {
 	}
 
 	// 年齢を表示するp要素を返す
-	static getAgeP(age) {
+	static createAgeP(age) {
 		let ageP = document.createElement("p");
 		ageP.classList.add("middle-font", "py-2");
 		ageP.innerHTML = age;
@@ -753,7 +755,7 @@ class View {
 	}
 
 	// 日数を表示するp要素を返す
-	static getDaysP(days) {
+	static createDaysP(days) {
 		let daysP = document.createElement("p");
 		daysP.classList.add("middle-font", "py-2");
 		daysP.innerHTML = days.toLocaleString();
@@ -762,7 +764,7 @@ class View {
 	}
 
 	// 所持金を表示するp要素を返す
-	static getMoneyP(money) {
+	static createMoneyP(money) {
 		let moneyP = document.createElement("p");
 		moneyP.classList.add("large-font");
 		moneyP.innerHTML = "￥" + money.toLocaleString();
@@ -770,16 +772,16 @@ class View {
 		return moneyP;
 	}
 
-	// アイテムリストのコンテナを返す
-	static getItemListCon(player) {
+	// アイテムリストのdiv要素を返す
+	static createItemListCon(player) {
 		let container = document.createElement("div");
-		container.innerHTML = View.getItemListString(player.itemList);
+		container.innerHTML = View.createItemListString(player.itemList);
 
 		for (let i = 0; i < player.itemList.length; i++) {
 			container.querySelectorAll(".item-list")[i].addEventListener("click", function () {
 				// アイテム購入画面を表示する
 				View.displayNone(container);
-				View.createItemPurchaseDialog(player, i);
+				View.displayItemPurchaseDialog(player, i);
 				// アイテム購入画面が開いている間はタイマーを止める
 				Controller.stopTimer(player);
 			});
@@ -788,7 +790,7 @@ class View {
 		return container;
 	}
 
-	static getItemListString(itemList) {
+	static createItemListString(itemList) {
 		let itemListString = "";
 
 		for (let i = 0; i < itemList.length; i++) {
@@ -831,9 +833,9 @@ class View {
 	}
 
 	// オブジェクトplayerとitemのインデックスを受け取ってアイテム購入ダイアログを表示する
-	static createItemPurchaseDialog(player, itemIndex) {
+	static displayItemPurchaseDialog(player, itemIndex) {
 		let itemListDiv = config.mainPage.querySelectorAll(".item-list-div")[0];
-		itemListDiv.innerHTML = View.getPurchaseDialogString(player, itemIndex);
+		itemListDiv.innerHTML = View.createPurchaseDialogString(player, itemIndex);
 
 		let goBackBtn = itemListDiv.querySelectorAll(".back-btn")[0];
 		let purchaseBtn = itemListDiv.querySelectorAll(".purchase-btn")[0];
@@ -867,7 +869,7 @@ class View {
 	}
 
 	// アイテム購入画面のHTMLを返す
-	static getPurchaseDialogString(player, itemIndex) {
+	static createPurchaseDialogString(player, itemIndex) {
 		let purchaseDialogString = '';
 		// 最大購入数が-1なら「∞」を表示する
 		let maxItem = player.itemList[itemIndex].maxPurchases;
@@ -914,7 +916,7 @@ class View {
 	}
 
 	// 購入画面の合計金額を表示するp要素を返す
-	static getTotalAmountP(itemAmount, itemPrice) {
+	static createTotalAmountP(itemAmount, itemPrice) {
 		let totalAmount = itemPrice * itemAmount;
 		let totalAmountP = document.createElement("p");
 		totalAmountP.classList.add("small-font");
@@ -927,49 +929,49 @@ class View {
 	static displayNumberOfBurgers(burgers) {
 		let numberOfBurgersDiv = config.mainPage.querySelectorAll("#numberOfBurgers")[0];
 		numberOfBurgersDiv.innerHTML = '';
-		numberOfBurgersDiv.append(View.getNumberOfBurgersP(burgers));
+		numberOfBurgersDiv.append(View.createNumberOfBurgersP(burgers));
 	}
 
 	// クリックごとの所得金額を表示する
 	static displayIncomePerClick(incomePerClick) {
 		let incomePerClickDiv = config.mainPage.querySelectorAll("#incomePerClick")[0];
 		incomePerClickDiv.innerHTML = '';
-		incomePerClickDiv.append(View.getIncomePerClickP(incomePerClick));
+		incomePerClickDiv.append(View.createIncomePerClickP(incomePerClick));
 	}
 
 	// 秒ごとの所得金額を表示する
 	static displayIncomePerSec(incomePerSec) {
 		let incomePerSecDiv = config.mainPage.querySelectorAll("#incomePerSec")[0];
 		incomePerSecDiv.innerHTML = '';
-		incomePerSecDiv.append(View.getIncomePerSecP(incomePerSec));
+		incomePerSecDiv.append(View.createIncomePerSecP(incomePerSec));
 	}
 
 	// 所持金を表示する
 	static displayMoney(money) {
 		let moneyDiv = config.mainPage.querySelectorAll("#money")[0];
 		moneyDiv.innerHTML = '';
-		moneyDiv.append(View.getMoneyP(money));
+		moneyDiv.append(View.createMoneyP(money));
 	}
 
 	// 日にちを表示する
 	static displayDays(days) {
 		let daysDiv = config.mainPage.querySelectorAll("#days")[0];
 		daysDiv.innerHTML = '';
-		daysDiv.append(View.getDaysP(days));
+		daysDiv.append(View.createDaysP(days));
 	}
 
 	// 年齢を表示する
 	static displayAge(age) {
 		let ageDiv = config.mainPage.querySelectorAll("#age")[0];
 		ageDiv.innerHTML = '';
-		ageDiv.append(View.getAgeP(age));
+		ageDiv.append(View.createAgeP(age));
 	}
 
 	// 購入画面の合計金額を表示する
 	static displayTotalAmount(itemAmount, price) {
 		let totalAmountDiv = config.mainPage.querySelectorAll("#totalAmount")[0];
 		totalAmountDiv.innerHTML = '';
-		totalAmountDiv.append(View.getTotalAmountP(itemAmount, price));
+		totalAmountDiv.append(View.createTotalAmountP(itemAmount, price));
 	}
 }
 
