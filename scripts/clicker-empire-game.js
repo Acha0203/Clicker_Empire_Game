@@ -84,14 +84,6 @@ class Controller {
 		}
 	}
 
-	// localStorageから取得したデータを返す
-	static loadData(playerName) {
-		let playerJsonString = localStorage.getItem(playerName);
-		console.log(playerJsonString);
-
-		return playerJsonString;
-	}
-
 	// タイトル画面を表示する
 	static showStartPage() {
 		View.displayNone(config.mainPage);
@@ -130,7 +122,7 @@ class Controller {
 	// セーブデータからゲームを始める(Continue)
 	static startContinue(playerName) {
 		let continueData = {};
-		let playerJsonString = Controller.loadData(playerName);
+		let playerJsonString = localStorage.getItem(playerName);
 
 		if (playerJsonString === null) {
 			alert("Your data is not saved. Your game will newly start. (データが保存されていません。New Game で始めます。)");
@@ -293,7 +285,6 @@ class Controller {
 
 	// クリックごとの取得金額を更新
 	static updateIncomePerClick(player) {
-		console.log(player.getIncomePerClick());
 		player.incomePerClick = player.getIncomePerClick();
 		View.displayIncomePerClick(player.incomePerClick);
 	}
