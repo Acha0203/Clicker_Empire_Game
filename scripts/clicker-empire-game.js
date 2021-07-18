@@ -21,16 +21,16 @@ class Player {
 	initializeItems() {
 		let itemList = [
 			new Item("Flip Machine", "ability", 500, 15000, 0, "+￥25 / click", "Get 25 extra yen per click", "images/burgers-1839090_1280.jpg"),
-			new Item("Lemonade Stand", "property", 1000, 30000, 0, "+￥30 / sec", "Get 30 extra yen per second", "images/lemonade-999593_1280.jpg"),
-			new Item("Ice Cream Truck", "property", 500, 100000, 0, "+￥120 / sec", "Get 120 extra yen per second", "images/ice-cream-410330_1280.jpg"),
-			new Item("ETF Stock", "investment", -1, 300000, 0, "+0.1% of Total Price / sec", "Get 0.1% of the total price yen per second", "images/1005931.png"),
-			new Item("ETF Bonds", "investment", -1, 300000, 0, "+0.07% of Total Price / sec", "Get 0.07% of the total price yen per second", "images/1005931.png"),
-			new Item("House", "property", 100, 20000000, 0, "+￥32,000 / sec", "Get 32,000 extra yen per second", "images/house-1867187_1280.jpg"),
-			new Item("Town House", "property", 100, 40000000, 0, "+￥64,000 / sec", "Get 64,000 extra yen per second", "images/bridge-1149423_1280.jpg"),
-			new Item("Mansion", "property", 20, 250000000, 0, "+￥500,000 / sec", "Get 500,000 extra yen per second", "images/leland-stanford-mansion-1594362_640.jpg"),
-			new Item("Industrial Space", "property", 10, 1000000000, 0, "+￥2,200,000 / sec", "Get 2,200,000 extra yen per second", "images/4365892_s.jpg"),
-			new Item("Hotel Skyscraper", "property", 5, 10000000000, 0, "+￥25,000,000 / sec", "Get 25,000,000 extra yen per second", "images/the-palm-962785_1280.jpg"),
-			new Item("Bullet-Speed Sky Railway", "property", 1, 10000000000000, 0, "+￥30,000,000,000 / sec", "Get 30,000,000,000 extra yen per second", "images/shinkansen-5237269_1280.jpg")
+			new Item("Lemonade Stand", "property", 1000, 30000, 0, "+￥30 / sec", "Get 30 extra yen / sec", "images/lemonade-999593_1280.jpg"),
+			new Item("Ice Cream Truck", "property", 500, 100000, 0, "+￥120 / sec", "Get 120 extra yen / sec", "images/ice-cream-410330_1280.jpg"),
+			new Item("ETF Stock", "investment", -1, 300000, 0, "+0.1% of Total Price / sec", "Get 0.1% of the total price yen / sec", "images/1005931.png"),
+			new Item("ETF Bonds", "investment", -1, 300000, 0, "+0.07% of Total Price / sec", "Get 0.07% of the total price yen / sec", "images/1005931.png"),
+			new Item("House", "property", 100, 20000000, 0, "+￥32,000 / sec", "Get 32,000 extra yen / sec", "images/house-1867187_1280.jpg"),
+			new Item("Town House", "property", 100, 40000000, 0, "+￥64,000 / sec", "Get 64,000 extra yen / sec", "images/bridge-1149423_1280.jpg"),
+			new Item("Mansion", "property", 20, 250000000, 0, "+￥500,000 / sec", "Get 500,000 extra yen / sec", "images/leland-stanford-mansion-1594362_640.jpg"),
+			new Item("Industrial Space", "property", 10, 1000000000, 0, "+￥2,200,000 / sec", "Get 2,200,000 extra yen / sec", "images/4365892_s.jpg"),
+			new Item("Hotel Skyscraper", "property", 5, 10000000000, 0, "+￥25,000,000 / sec", "Get 25,000,000 extra yen / sec", "images/the-palm-962785_1280.jpg"),
+			new Item("Bullet-Speed Sky Railway", "property", 1, 10000000000000, 0, "+￥30,000,000,000 / sec", "Get 30,000,000,000 extra yen / sec", "images/shinkansen-5237269_1280.jpg")
 		];
 
 		this.itemList = itemList;
@@ -295,10 +295,18 @@ class Controller {
 		View.displayIncomePerSec(player.incomePerSec);
 	}
 
-	// 購入画面からアイテムリスト表示に戻る
-	static backToItemList(container, player) {
-		container.innerHTML = '';
-		container.append(View.createItemListCon(player));
+	// 購入画面からゲーム画面に戻る
+	static backToGame(player, mask, itemPurchaseDialog) {
+		// 購入画面を閉じる
+		itemPurchaseDialog.innerHTML = '';
+		itemPurchaseDialog.classList.add("hidden");
+		// 画面を明るくする
+		mask.classList.add("hidden");
+
+		// アイテムリストを書き換える
+		const itemListDiv = config.mainPage.querySelectorAll(".item-list-div")[0];
+		itemListDiv.innerHTML = '';
+		itemListDiv.append(View.createItemListCon(player));
 		// タイマー再開
 		Controller.startTimer(player);
 	}
@@ -546,14 +554,11 @@ class View {
 		burgerImage.setAttribute("id", "hamburger");
 
 		burgerImage.addEventListener("click", function () {
-			// クリック時の処理。タイマーが停止中は何もしない
-			if (!player.timerStopFlag) {
-				// ハンバーガーと所持金を追加
-				player.burgers++;
-				player.money += player.incomePerClick;
-				View.displayNumberOfBurgers(player.burgers);
-				View.displayMoney(player.money);
-			}
+			// ハンバーガーと所持金を追加
+			player.burgers++;
+			player.money += player.incomePerClick;
+			View.displayNumberOfBurgers(player.burgers);
+			View.displayMoney(player.money);
 		});
 
 		burgerDiv.append(burgerImage);
@@ -770,11 +775,11 @@ class View {
 
 		for (let i = 0; i < player.itemList.length; i++) {
 			container.querySelectorAll(".item-list")[i].addEventListener("click", function () {
-				// アイテム購入画面を表示する
-				View.displayNone(container);
-				View.displayItemPurchaseDialog(player, i);
 				// アイテム購入画面が開いている間はタイマーを止める
 				Controller.stopTimer(player);
+				// アイテム購入画面を表示する
+
+				View.displayItemPurchaseDialog(player, i);
 			});
 		}
 
@@ -825,12 +830,19 @@ class View {
 
 	// オブジェクトplayerとitemのインデックスを受け取ってアイテム購入ダイアログを表示する
 	static displayItemPurchaseDialog(player, itemIndex) {
-		let itemListDiv = config.mainPage.querySelectorAll(".item-list-div")[0];
-		itemListDiv.innerHTML = View.createPurchaseDialogString(player, itemIndex);
+		const itemPurchaseDialog = document.getElementById("modal");
+		itemPurchaseDialog.classList.remove("hidden");
+		itemPurchaseDialog.classList.add("col-md-7", "col-12");
+		itemPurchaseDialog.innerHTML = View.createPurchaseDialogString(player, itemIndex);
 
-		let goBackBtn = itemListDiv.querySelectorAll(".back-btn")[0];
-		let purchaseBtn = itemListDiv.querySelectorAll(".purchase-btn")[0];
-		let itemAmount = itemListDiv.querySelectorAll(".item-amount")[0];
+		// ダイアログ以外を暗くする
+		const mask = document.getElementById("mask");
+		mask.classList.remove("hidden");
+
+		const goBackBtn = document.getElementById("goBackBtn");
+		const purchaseBtn = document.getElementById("purchaseBtn");
+		const itemAmount = document.getElementById("itemAmount");
+
 		// inputタグのmax属性を設定
 		if (player.itemList[itemIndex].maxPurchases !== -1) itemAmount.setAttribute("max", player.itemList[itemIndex].maxPurchases - player.itemList[itemIndex].amount);
 
@@ -842,7 +854,8 @@ class View {
 		});
 
 		goBackBtn.addEventListener("click", function () {
-			Controller.backToItemList(itemListDiv, player);
+			// ゲーム画面に戻る
+			Controller.backToGame(player, mask, itemPurchaseDialog);
 		});
 
 		purchaseBtn.addEventListener("click", function () {
@@ -853,8 +866,8 @@ class View {
 				alert("You can't purchase this item anymore. (このアイテムはこれ以上購入できません。)");
 			} else { // 購入可能なら購入処理へ
 				Controller.updatePlayerData(player, itemIndex, itemAmount.value);
-				// アイテムリストに戻る
-				Controller.backToItemList(itemListDiv, player);
+				// ゲーム画面に戻る
+				Controller.backToGame(player, mask, itemPurchaseDialog);
 			}
 		});
 	}
@@ -868,7 +881,7 @@ class View {
 
 		purchaseDialogString =
 			`
-			<div class="metallic flex-column justify-content-around align-items-center m-2 p-4">
+			<div class="metallic flex-column justify-content-around align-items-center p-4">
 				<div class="text-center col-12 m-1">
 					<p class="x-large-font">${player.itemList[itemIndex].itemName}</p>
 				</div>
@@ -884,20 +897,21 @@ class View {
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="middle-font text-center my-2 ml-3" for="itemAmount">
-						How Many would you like to purchase?
-					</label>
-					<input id="itemAmount" type="number" class="text-end col-12 ml-3 item-amount" min="0" value="0">
+					<p class="middle-font text-center my-2 ml-3">How Many would you like to purchase?</p>
+					<div class="concavity container d-flex justify-content-end col-12 my-2">
+						<p class="small-font text-end">￥${player.money}</p>
+					</div>
+					<input id="itemAmount" type="number" class="text-end col-12 ml-3" min="0" value="0">
 				</div>
 				<div id="totalAmount" class="text-end my-2 mr-4">
 					<p class="small-font">Total: ￥0</p>
 				</div>
 				<div class="row">
 					<div class="d-flex justify-content-stert col-6 mb-3">
-						<button class="btn btn-light text-success col-12 back-btn">Go Back</button>
+						<button class="btn btn-light dark-green col-12" id="goBackBtn">Go Back</button>
 					</div>
 					<div class="d-flex justify-content-end col-6 mb-3">
-						<button class="btn btn-success col-12 purchase-btn" disabled>Purchase</button>
+						<button class="btn btn-green col-12" id="purchaseBtn" disabled>Purchase</button>
 					</div>
 				</div>
 			</div>
@@ -960,7 +974,7 @@ class View {
 
 	// 購入画面の合計金額を表示する
 	static displayTotalAmount(itemAmount, price) {
-		let totalAmountDiv = config.mainPage.querySelectorAll("#totalAmount")[0];
+		let totalAmountDiv = document.getElementById("totalAmount");
 		totalAmountDiv.innerHTML = '';
 		totalAmountDiv.append(View.createTotalAmountP(itemAmount, price));
 	}
