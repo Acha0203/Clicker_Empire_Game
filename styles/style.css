@@ -133,13 +133,7 @@ btn:disabled {
 	width: auto;
 }
 
-@media screen and (min-width: 897px) {
-	.item-info {
-		display: block;
-	}
-}
-
-@media screen and (max-width: 896px) {
+@media screen and (max-width: 413px) {
 	.item-info {
 		display: none;
 	}
