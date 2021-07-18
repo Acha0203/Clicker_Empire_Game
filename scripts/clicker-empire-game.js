@@ -899,7 +899,7 @@ class View {
 				<div class="form-group">
 					<p class="middle-font text-center my-2 ml-3">How Many would you like to purchase?</p>
 					<div class="concavity container d-flex justify-content-end col-12 my-2">
-						<p class="small-font text-end">￥${player.money}</p>
+						<p class="small-font text-end">￥${player.money.toLocaleString()}</p>
 					</div>
 					<input id="itemAmount" type="number" class="text-end col-12 ml-3" min="0" value="0">
 				</div>
