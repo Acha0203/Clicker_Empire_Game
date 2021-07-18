@@ -129,21 +129,40 @@ class Controller {
 
 	// セーブデータからゲームを始める(Continue)
 	static startContinue(playerName) {
-		let player = {};
+		let continueData = {};
 		let playerJsonString = Controller.loadData(playerName);
 
 		if (playerJsonString === null) {
 			alert("Your data is not saved. Your game will newly start. (データが保存されていません。New Game で始めます。)");
 			Controller.startNewGame(playerName);
 		} else {
-			player = JSON.parse(playerJsonString);
-			if (!Controller.inspectPlayerObject(player)) {
+			continueData = JSON.parse(playerJsonString);
+			if (!Controller.inspectPlayerObject(continueData)) {
 				alert("Your data is invalid. Your game will newly start. (不正なデータです。New Game で始めます。)");
 				Controller.startNewGame(playerName);
 			} else {
+				let player = Controller.createContinuePlayer(continueData)
 				Controller.enterMainGamePage(player);
 			}
 		}
+	}
+
+	// ロードしたデータからプレイヤーオブジェクトを作成して返す
+	static createContinuePlayer(continueData) {
+		let player = new Player(
+			continueData.name,
+			continueData.age,
+			continueData.money,
+			continueData.days,
+			continueData.burgers,
+			continueData.incomePerClick,
+			continueData.incomePerSec,
+			continueData.intervalId,
+			false,
+			continueData.itemList
+		);
+
+		return player;
 	}
 
 	// セーブデータの検証。有効なデータならtrueを返す。
@@ -152,6 +171,7 @@ class Controller {
 			Object.prototype.toString.call(player.name) !== "[object String]" ||
 			Object.prototype.toString.call(player.age) !== "[object Number]" ||
 			Object.prototype.toString.call(player.money) !== "[object Number]" ||
+			Object.prototype.toString.call(player.days) !== "[object Number]" ||
 			Object.prototype.toString.call(player.burgers) !== "[object Number]" ||
 			Object.prototype.toString.call(player.incomePerClick) !== "[object Number]" ||
 			Object.prototype.toString.call(player.incomePerSec) !== "[object Number]" ||
@@ -161,6 +181,7 @@ class Controller {
 			player.name === '' ||
 			player.age < 20 ||
 			player.money < 0 ||
+			player.days < 0 ||
 			player.burgers < 0 ||
 			player.incomePerClick < 0 ||
 			player.incomePerSec < 0 ||
@@ -256,21 +277,23 @@ class Controller {
 		View.displayMoney(player.money);
 		// アイテムの所持数を更新
 		player.itemList[itemIndex].amount += parseInt(itemAmount);
-		// 購入品がFlip Machineの場合はクリックごとの取得金額を更新
-		// 購入品がETF Stockの場合は価格と秒ごとの取得金額を更新
-		// 購入品がそれ以外の場合は秒ごとの取得金額を更新
+
 		if (player.itemList[itemIndex].itemName === "Flip Machine") {
+			// 購入品がFlip Machineの場合はクリックごとの取得金額を更新
 			Controller.updateIncomePerClick(player);
 		} else if (player.itemList[itemIndex].itemName === "ETF Stock") {
+			// 購入品がETF Stockの場合は価格と秒ごとの取得金額を更新
 			player.itemList[itemIndex].price *= 1.1;
 			Controller.updateIncomePerSec(player);
 		} else {
+			// 購入品がそれ以外の場合は秒ごとの取得金額を更新
 			Controller.updateIncomePerSec(player);
 		}
 	}
 
 	// クリックごとの取得金額を更新
 	static updateIncomePerClick(player) {
+		console.log(player.getIncomePerClick());
 		player.incomePerClick = player.getIncomePerClick();
 		View.displayIncomePerClick(player.incomePerClick);
 	}
@@ -678,9 +701,16 @@ class View {
 
 		saveBtn.addEventListener("click", function () {
 			// セーブ処理
+			// 処理中はタイマーを止める
+			Controller.stopTimer(player);
 			let result = Controller.saveData(player);
-			if (result) alert("Your data has been successfully saved! Enter the same name when you resume this game. (データは正常に保存されました。ゲームを再開するときに同じ名前を入力してください。)");
-			else alert("Saving your data has been failed. (データの保存に失敗しました。)");
+			if (result) {
+				alert("Your data has been successfully saved! Enter the same name when you resume this game. (データは正常に保存されました。ゲームを再開するときに同じ名前を入力してください。)");
+				Controller.startTimer(player);
+			} else {
+				alert("Saving your data has been failed. (データの保存に失敗しました。)");
+				Controller.startTimer(player);
+			}
 		});
 
 		return buttonDiv;
@@ -747,6 +777,7 @@ class View {
 
 		for (let i = 0; i < player.itemList.length; i++) {
 			container.querySelectorAll(".item-list")[i].addEventListener("click", function () {
+				// アイテム購入画面を表示する
 				View.displayNone(container);
 				View.createItemPurchaseDialog(player, i);
 				// アイテム購入画面が開いている間はタイマーを止める
@@ -811,9 +842,10 @@ class View {
 		if (player.itemList[itemIndex].maxPurchases !== -1) itemAmount.setAttribute("max", player.itemList[itemIndex].maxPurchases - player.itemList[itemIndex].amount);
 
 		itemAmount.addEventListener("change", function () {
+			// 合計金額の表示
 			View.displayTotalAmount(itemAmount.value, player.itemList[itemIndex].price);
 			if (itemAmount.value !== "0") purchaseBtn.disabled = false;
-			else purchaseBtn.disabled = true;
+			else purchaseBtn.disabled = true; // 購入数0のときはPurchaseボタンをグレーアウト
 		});
 
 		goBackBtn.addEventListener("click", function () {
