@@ -96,7 +96,7 @@ class Controller {
 	static createNewPlayer(playerName) {
 		let player = new Player(playerName, 20, 50000, 0, 0, 25, 0, null, false);
 
-		if (playerName === "cheater") player.money = 100000000000000;
+		if (playerName === "cheater") player.money = 10000000000000;
 
 		return player;
 	}
@@ -644,7 +644,7 @@ class View {
 	static createMoneyCon(money) {
 		let moneyCon = document.createElement("div");
 		let moneyDiv = document.createElement("div");
-		moneyDiv.classList.add("concavity", "container", "d-flex", "justify-content-end", "col-12", "mt-3");
+		moneyDiv.classList.add("concavity", "d-flex", "justify-content-end", "col-12", "mt-3");
 		moneyDiv.setAttribute("id", "money");
 		moneyDiv.append(View.createMoneyP(money));
 		moneyCon.append(moneyDiv);
@@ -762,7 +762,7 @@ class View {
 	// 所持金を表示するp要素を返す
 	static createMoneyP(money) {
 		let moneyP = document.createElement("p");
-		moneyP.classList.add("large-font");
+		moneyP.classList.add("large-font", "px-2");
 		moneyP.innerHTML = "￥" + money.toLocaleString();
 
 		return moneyP;
