@@ -151,8 +151,20 @@ class Controller {
 			continueData.incomePerSec,
 			continueData.intervalId,
 			false,
-			continueData.itemList
 		);
+
+		player.itemList[0].amount = continueData.itemList[0].amount;
+		player.itemList[1].amount = continueData.itemList[1].amount;
+		player.itemList[2].amount = continueData.itemList[2].amount;
+		player.itemList[3].amount = continueData.itemList[3].amount;
+		player.itemList[3].price = continueData.itemList[3].price;
+		player.itemList[4].amount = continueData.itemList[4].amount;
+		player.itemList[5].amount = continueData.itemList[5].amount;
+		player.itemList[6].amount = continueData.itemList[6].amount;
+		player.itemList[7].amount = continueData.itemList[7].amount;
+		player.itemList[8].amount = continueData.itemList[8].amount;
+		player.itemList[9].amount = continueData.itemList[9].amount;
+		player.itemList[10].amount = continueData.itemList[10].amount;
 
 		return player;
 	}
