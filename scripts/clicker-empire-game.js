@@ -103,7 +103,7 @@ class Controller {
 
 	// [Game Start]クリック後の処理
 	static gameStart() {
-		let newGame = document.getElementById("newGame");
+		const newGame = document.getElementById("newGame");
 		let playerName = config.startPage.querySelectorAll(`input[name="playerName"]`)[0].value;
 
 		if (newGame.checked) {
@@ -974,7 +974,7 @@ class View {
 
 	// 購入画面の合計金額を表示する
 	static displayTotalAmount(itemAmount, price) {
-		let totalAmountDiv = document.getElementById("totalAmount");
+		const totalAmountDiv = document.getElementById("totalAmount");
 		totalAmountDiv.innerHTML = '';
 		totalAmountDiv.append(View.createTotalAmountP(itemAmount, price));
 	}
