@@ -28,7 +28,7 @@ class Player {
 			new Item("House", "property", 100, 20000000, 0, "+￥32,000 / sec", "Get 32,000 extra yen / sec", "images/house-1867187_1280.jpg"),
 			new Item("Town House", "property", 100, 40000000, 0, "+￥64,000 / sec", "Get 64,000 extra yen / sec", "images/bridge-1149423_1280.jpg"),
 			new Item("Mansion", "property", 20, 250000000, 0, "+￥500,000 / sec", "Get 500,000 extra yen / sec", "images/leland-stanford-mansion-1594362_640.jpg"),
-			new Item("Industrial Space", "property", 10, 1000000000, 0, "+￥2,200,000 / sec", "Get 2,200,000 extra yen / sec", "images/4365892_s.jpg"),
+			new Item("Industrial Space", "property", 10, 1000000000, 0, "+￥2,200,000 / sec", "Get 2,200,000 extra yen / sec", "images/factory-947425_1280.jpg"),
 			new Item("Hotel Skyscraper", "property", 5, 10000000000, 0, "+￥25,000,000 / sec", "Get 25,000,000 extra yen / sec", "images/the-palm-962785_1280.jpg"),
 			new Item("Bullet-Speed Sky Railway", "property", 1, 10000000000000, 0, "+￥30,000,000,000 / sec", "Get 30,000,000,000 extra yen / sec", "images/shinkansen-5237269_1280.jpg")
 		];
