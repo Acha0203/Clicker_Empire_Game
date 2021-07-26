@@ -338,6 +338,7 @@ class Controller {
 
 		return interest;
 	}
+
 }
 
 class View {
@@ -861,8 +862,8 @@ class View {
 		itemAmount.addEventListener("change", function () {
 			// 合計金額の表示
 			View.displayTotalAmount(itemAmount.value, player.itemList[itemIndex].price);
-			if (itemAmount.value !== "0") purchaseBtn.disabled = false;
-			else purchaseBtn.disabled = true; // 購入数0のときはPurchaseボタンをグレーアウト
+			if (parseInt(itemAmount.value) >= 1) purchaseBtn.disabled = false;
+			else purchaseBtn.disabled = true; // 購入数1未満のときはPurchaseボタンをグレーアウト
 		});
 
 		goBackBtn.addEventListener("click", function () {
@@ -934,7 +935,7 @@ class View {
 
 	// 購入画面の合計金額を表示するp要素を返す
 	static createTotalAmountP(itemAmount, itemPrice) {
-		let totalAmount = itemPrice * itemAmount;
+		let totalAmount = itemPrice * parseInt(itemAmount);
 		let totalAmountP = document.createElement("p");
 		totalAmountP.classList.add("small-font");
 		totalAmountP.innerHTML = "Total: ￥" + totalAmount.toLocaleString();
