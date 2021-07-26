@@ -5,6 +5,10 @@
 
 This web application was created as a school project in [Recursion](https://recursionist.io). You are a 20-year-old youth who dreams of becoming a millionaire. By making a lot of hamburgers, you make a fortune to purchase stocks, mansion, and more for building your own empire.
 
+## Demo
+
+![Clicker](https://user-images.githubusercontent.com/74553433/127011118-6a546acb-1f47-464b-9bea-d064d21b1228.gif)
+
 ## URL
 
 https://acha0203.github.io/Clicker_Empire_Game/
